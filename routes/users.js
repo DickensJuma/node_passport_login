@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 // Load User model
-const User = require('../models/User');
+const User = require('../models/user.js');
 const { forwardAuthenticated } = require('../config/auth');
 
 // Login Page
@@ -14,10 +14,10 @@ router.get('/register', forwardAuthenticated, (req, res) => res.render('register
 
 // Register
 router.post('/register', (req, res) => {
-  const { name, email, password, password2 } = req.body;
+  const { name, email, password, password2 ,nationalId} = req.body;
   let errors = [];
 
-  if (!name || !email || !password || !password2) {
+  if (!name || !email || !password || !password2 ) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
@@ -35,7 +35,8 @@ router.post('/register', (req, res) => {
       name,
       email,
       password,
-      password2
+      password2,
+      nationalId
     });
   } else {
     User.findOne({ email: email }).then(user => {
@@ -46,7 +47,9 @@ router.post('/register', (req, res) => {
           name,
           email,
           password,
-          password2
+          password2,
+          nationalId
+       
         });
       } else {
         const newUser = new User({
